@@ -1,0 +1,1 @@
+LRMS - Laptop Rental Management system is my small ecommerce application project about doing Laptop Rentals in Python Flask
