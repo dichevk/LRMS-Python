@@ -1,6 +1,6 @@
 from flask import Flask
-from .views import bp
-from .models import db
+from .Views import bp
+from .Models import db
 
 def create_app():
     app = Flask(__name__)

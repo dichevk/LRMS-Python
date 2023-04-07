@@ -1,6 +1,6 @@
 from flask import render_template
 from app import app, db
-from app.models import Laptop
+from ..Models import Laptop
 
 # Controller for the home page
 @app.route('/')

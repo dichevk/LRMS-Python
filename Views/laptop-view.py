@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for
-from .models import Laptop
+from ..Models import Laptop
 
 bp = Blueprint('laptop', __name__)
 
