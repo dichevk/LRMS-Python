@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, request, url_for
 from ..Models import Laptop
 
 bp = Blueprint('laptop', __name__)
