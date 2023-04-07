@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="row">
+    {% for laptop in laptops %}
+      <div class="col-md-4">
+        <div class="card mb-4 shadow-sm">
+          <img src="{{ laptop.image }}" class="card-img-top" alt="{{ laptop.name }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ laptop.name }}</h5>
+            <p class="card-text">{{ laptop.price }} per rent</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="btn-group">
+                <a href="{{ url_for('laptop', id=laptop.id) }}" class="btn btn-sm btn-outline-secondary">View</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

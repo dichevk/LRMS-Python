@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-4">
+      <img src="{{ laptop.image }}" class="card-img-top" alt="{{ laptop.name }}">
+    </div>
+    <div class="col-md-8">
+      <h2>{{ laptop.name }}</h2>
+      <p>{{ laptop.specs }}</p>
+      <p>{{ laptop.price }} per rent</p>
+    </div>
+  </div>
+{% endblock %}
