@@ -44,3 +44,25 @@ def test_delete_laptop(client):
     response = client.post(url_for('delete_laptop', id=laptop.id))
     assert response.status_code == 302
     assert Laptop.query.filter_by(name='Laptop5').first() is None
+
+def test_update_laptop(client):
+    # Create a new laptop
+    laptop = {'name': 'MacBook Pro', 'image': 'macbook.jpg', 'price': 1500, 'specs': '16GB RAM, 512GB SSD'}
+    response = client.post('/add_laptop', data=laptop)
+    assert response.status_code == 302  # Check that the laptop was created successfully
+
+    # Update the laptop
+    new_laptop = {'name': 'MacBook Air', 'image': 'macbook-air.jpg', 'price': 1200, 'specs': '8GB RAM, 256GB SSD'}
+    response = client.put(f'/laptop/{response.json["laptop"]["id"]}', json=new_laptop)
+
+    assert response.status_code == 200  # Check that the laptop was updated successfully
+    assert response.json['message'] == 'Laptop updated successfully.'
+
+    # Fetch the updated laptop and check that it matches the updated data
+    response = client.get(f'/laptop/{response.json["laptop"]["id"]}')
+    updated_laptop = response.json['laptop']
+
+    assert updated_laptop['name'] == new_laptop['name']
+    assert updated_laptop['image'] == new_laptop['image']
+    assert updated_laptop['price'] == new_laptop['price']
+    assert updated_laptop['specs'] == new_laptop['specs']
