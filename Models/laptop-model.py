@@ -25,3 +25,12 @@ class Laptop(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+    def to_dict(self):
+        return {
+        'id': self.id,
+        'name': self.name,
+        'image': self.image,
+        'price': self.price,
+        'specs': self.specs
+        }
