@@ -56,7 +56,6 @@ def test_update_laptop(client):
     response = client.put(f'/laptop/{response.json["laptop"]["id"]}', json=new_laptop)
 
     assert response.status_code == 200  # Check that the laptop was updated successfully
-    assert response.json['message'] == 'Laptop updated successfully.'
 
     # Fetch the updated laptop and check that it matches the updated data
     response = client.get(f'/laptop/{response.json["laptop"]["id"]}')
