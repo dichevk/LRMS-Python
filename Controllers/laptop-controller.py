@@ -48,6 +48,33 @@ def edit_laptop(id):
         return redirect(url_for('laptop', id=id))
     return render_template('edit_laptop.html', laptop=laptop)
 
+
+@app.route('/laptop/<int:id>', methods=['PUT'])
+def update_laptop(id):
+    laptop = Laptop.get_by_id(id)
+    if not laptop:
+        return {"error": "Laptop not found."}, 404
+
+    if request.content_type != 'application/json':
+        return {"error": "Invalid content type. Expected JSON."}, 400
+
+    data = request.get_json()
+    if not data:
+        return {"error": "No data provided."}, 400
+
+    if 'name' in data:
+        laptop.name = data['name']
+    if 'image' in data:
+        laptop.image = data['image']
+    if 'price' in data:
+        laptop.price = data['price']
+    if 'specs' in data:
+        laptop.specs = data['specs']
+    
+    laptop.save()
+
+    return {"message": "Laptop updated successfully.", "laptop": laptop.to_dict()}, 200
+
 # Controller for deleting an existing laptop
 @app.route('/laptop/delete/<int:id>', methods=['POST'])
 def delete_laptop(id):
