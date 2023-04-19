@@ -7,8 +7,11 @@ class Laptop(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     image = db.Column(db.String(100), nullable=False)
-    price = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Float(precision=2), nullable=False)
     specs = db.Column(db.String(500), nullable=False)
+    availability_start_date = db.Column(db.String(500), nullable=False)
+    availability_end_date = db.Column(db.String(500), nullable=True)
+    available = db.Column(db.Boolean, nullable=False)
 
     @classmethod
     def get_all(cls):
