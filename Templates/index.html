@@ -4,7 +4,7 @@
 <div class="row">
     {% for laptop in laptops %}
     <div class="col-md-4 mb-3">
-        <div class="card">
+        <div class="card {% if laptop.available %}bg-success{% else %}bg-danger{% endif %}">
             <img class="card-img-top" src="{{ laptop.image_url }}" alt="Card image cap">
             <div class="card-body">
                 <h5 class="card-title">{{ laptop.name }}</h5>
