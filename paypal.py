@@ -4,7 +4,7 @@ import paypalrestsdk
 paypalrestsdk.configure({
     "mode": "sandbox", # or "live"
     "client_id": "PLACEHOLDER FOR THE CLIENT ID NOT PROVIDED FOR SECURITY PURPOSES",
-    "client_secret": "PLACEHOLDER FOR THE CLIENT ID NOT PROVIDED FOR SECURITY PURPOSES"
+    "client_secret": "PLACEHOLDER FOR THE CLIENT SECRET NOT PROVIDED FOR SECURITY PURPOSES"
 })
 
 # Create a payment using PayPal API
