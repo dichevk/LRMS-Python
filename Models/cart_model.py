@@ -8,6 +8,7 @@ class Cart(db.Model):
     laptop_id = db.Column(db.Integer, db.ForeignKey("laptops.id"), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    orders = db.relationship('Order', backref='cart', lazy=True)
 
     def __repr__(self):
         return f"<Cart {self.id}>"
@@ -26,5 +27,6 @@ class Cart(db.Model):
             "user_id": self.user_id,
             "laptop_id": self.laptop_id,
             "quantity": self.quantity,
-            "created_at": self.created_at.isoformat(),
+            "created_at": self.created_at,
+            "orders":self.orders
         }
