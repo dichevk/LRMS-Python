@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Order Confirmation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="logo">
+          <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo"></a>
+        </div>
+        <div class="cart">
+          <a href="{{ url_for('cart') }}"><img src="{{ url_for('static', filename='images/shopping-cart.png') }}" alt="Shopping Cart"></a>
+        </div>
+      </header>
+      <main>
+        <h1>Order Confirmation</h1>
+        <p>Thank you for your order! Your items will be shipped within 2-3 business days.</p>
+        <h2>Order Details</h2>
+        <ul>
+          {% for item in cart.items %}
+          <li>{{ item.product.name }} x {{ item.quantity }} - {{ item.product.price }} USD</li>
+          {% endfor %}
+        </ul>
+        <p>Total: {{ cart.total }} USD</p>
+        <form action="{{ url_for('paypal_checkout') }}" method="post">
+          <input type="hidden" name="total" value="{{ cart.total }}">
+          <input type="image" name="submit" border="0" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif" alt="PayPal - The safer, easier way to pay online">
+        </form>
+      </main>
+      <footer>
+        <p>&copy; 2023 My Online Store. All rights reserved.</p>
+      </footer>
+    </div>
+  </body>
+</html>
