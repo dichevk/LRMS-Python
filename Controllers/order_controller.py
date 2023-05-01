@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from app import db
+import paypal
 from ..Models import Order
 
 order_bp = Blueprint('order', __name__, url_prefix='/order')
@@ -10,7 +11,20 @@ def create_order():
     order = Order(user_id=data['user_id'], laptop_id=data['laptop_id'], quantity=data['quantity'], total_price=data['total_price'])
     db.session.add(order)
     db.session.commit()
-    return jsonify(order.to_dict())
+     # call PayPal API to process payment
+    paypal_api = paypal.PayPalAPI()
+    payment = paypal_api.process_payment(order.total_amount)
+
+    # update order status based on payment status
+    if payment.success:
+        order.status = 'PAID'
+    else:
+        order.status = 'PAYMENT_FAILED'
+        
+    # second call to update the status in the db
+    db.session.commit()
+    # return order information in response
+    return jsonify(order.serialize()), 201
 
 @order_bp.route('/<int:id>', methods=['GET'])
 def get_order(id):
