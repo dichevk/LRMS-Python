@@ -1,7 +1,7 @@
 from flask import render_template, request, flash, url_for, redirect
 from flask import abort
 from app import app, db
-from ..Models import Laptop
+from ..Models.laptop_model import Laptop
 
 # Controller for the home page
 @app.route('/')

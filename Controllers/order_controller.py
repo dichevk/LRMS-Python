@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app import db
 import paypal
-from ..Models import Order
+from ..Models.order_model import Order
 
 order_bp = Blueprint('order', __name__, url_prefix='/order')
 

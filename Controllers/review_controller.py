@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, abort
 from app import db
-from ..Models import Review, Laptop
+from ..Models.laptop_model import Laptop
+from ..Models.review_model import Review
 
 review_bp = Blueprint('review', __name__, url_prefix='/review')
 

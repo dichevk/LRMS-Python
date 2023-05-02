@@ -1,6 +1,6 @@
-from flask import Blueprint, jsonify, request
+from flask import jsonify, request
 from werkzeug.security import generate_password_hash, check_password_hash
-from ..Models import db, User
+from ..Models.user_model import User
 from app import app, db
 
 @app.route('/users', methods=['GET'])
