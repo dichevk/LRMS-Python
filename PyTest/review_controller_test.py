@@ -1,9 +1,8 @@
 import json
 from ..Models.laptop_model import Laptop
 from ..Models.review_model import Review
-from ..Models.user_model import User
 
-def test_add_review(client, app, db):
+def test_add_review(client, db):
     # create a new laptop
     laptop = Laptop(name="Test Laptop", price=1000, specs="Test specs")
     db.session.add(laptop)

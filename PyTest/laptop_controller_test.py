@@ -1,4 +1,4 @@
-from ..Models import Laptop
+from ..Models.laptop_model import Laptop
 import app
 from app import db
 from flask import url_for
