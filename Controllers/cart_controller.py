@@ -5,9 +5,9 @@ from ..Models.cart_item_model import CartItem
 from ..Models.laptop_model import Laptop
 from ..Models.user_model import User
 from ..Models.order_item_model import OrderItem
-from app import db,app
+from app import db
 import paypalrestsdk
-from flask import g
+from flask import g, url_for, session
 import datetime
 
 cart_bp = Blueprint('cart_bp', __name__, url_prefix='/cart')
@@ -198,52 +198,50 @@ def checkout():
         for cart_item in cart.cart_items:
             order_item = OrderItem(order_id=order.id, laptop_id=cart_item.laptop_id, quantity=cart_item.quantity)
             db.session.add(order_item)
+
+        # Calculate the total amount for the cart items
+        total_amount = 0
+        for cart_item in cart.cart_items:
+            total_amount += cart_item.laptop.price * cart_item.quantity
         
+        # Create a PayPal payment object
+        payment = paypalrestsdk.Payment({
+            "intent": "sale",
+            "payer": {
+                "payment_method": "paypal"
+            },
+            "transactions": [{
+                "amount": {
+                    "total": "{:.2f}".format(total_amount),
+                    "currency": "USD"
+                },
+                "description": "Payment for the laptop order."
+            }],
+            "redirect_urls": {
+                "return_url": url_for("cart.execute_payment", _external=True),
+                "cancel_url": url_for("cart.cancel_payment", _external=True)
+            }
+        })
+        
+        # Attempt to create a PayPal payment
+        if payment.create():
+            # Store the PayPal payment ID in the session
+            session["paypal_payment_id"] = payment.id
+            
+            # Retrieve the redirect URL from the payment object and return it to the client
+            for link in payment.links:
+                if link.method == "REDIRECT":
+                    redirect_url = str(link.href)
+                    # Empty the cart
+                    for cart_item in cart.cart_items:
+                        db.session.delete(cart_item)
+                    db.session.commit()
+                    return jsonify({"redirect_url": redirect_url}), 200
+        else:
+            # If creating the PayPal payment fails, return an error message
+            return jsonify({"error": payment.error}), 400
+            
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    cart_id = request.json.get("cart_id")
-    
-    # Retrieve the cart associated with the provided id
-    cart = Cart.query.get_or_404(cart_id)
-    
-    # Calculate the total amount for the cart items
-    total_amount = 0
-    for cart_item in cart.cart_items:
-        total_amount += cart_item.laptop.price * cart_item.quantity
-    
-    # Create a PayPal payment object
-    payment = paypalrestsdk.Payment({
-        "intent": "sale",
-        "payer": {
-            "payment_method": "paypal"
-        },
-        "transactions": [{
-            "amount": {
-                "total": "{:.2f}".format(total_amount),
-                "currency": "USD"
-            },
-            "description": "Payment for the laptop order."
-        }],
-        "redirect_urls": {
-            "return_url": "http://localhost:5000/api/payment/execute",
-            "cancel_url": "http://localhost:5000/api/payment/cancel"
-        }
-    })
-    
-    # Attempt to create a PayPal payment
-    if payment.create():
-        # Store the PayPal payment ID in the session
-        session["paypal_payment_id"] = payment.id
-        
-        # Retrieve the redirect URL from the payment object and return it to the client
-        for link in payment.links:
-            if link.method == "REDIRECT":
-                redirect_url = str(link.href)
-                 # Empty the cart
-                for cart_item in cart.cart_items:
-                    db.session.delete(cart_item)
-                db.session.commit()
-                return jsonify({"redirect_url": redirect_url}), 200
-    else:
-        # If creating the PayPal payment fails, return an error message
-        return jsonify({"error": payment.error}), 400
+
+   
