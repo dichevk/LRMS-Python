@@ -18,20 +18,20 @@ api_bp.add_url_rule('/user/<int:id>', view_func=user_controller.delete_user, met
 
 # Laptop API Endpoints
 api_bp.add_url_rule('/laptop', view_func=laptop_controller.get_laptops, methods=['GET'])
-api_bp.add_url_rule('/laptop/<int:id>', view_func=laptop_controller.get_laptop, methods=['GET'])
-api_bp.add_url_rule('/laptop', view_func=laptop_controller.create_laptop, methods=['POST'])
+api_bp.add_url_rule('/laptop/<int:id>', view_func=laptop_controller.laptop, methods=['GET'])
+api_bp.add_url_rule('/laptop', view_func=laptop_controller.new_laptop, methods=['POST'])
 api_bp.add_url_rule('/laptop/<int:id>', view_func=laptop_controller.update_laptop, methods=['PUT'])
 api_bp.add_url_rule('/laptop/<int:id>', view_func=laptop_controller.delete_laptop, methods=['DELETE'])
 
 # Cart API Endpoints
-api_bp.add_url_rule('/cart', view_func=cart_controller.get_carts, methods=['GET'])
+api_bp.add_url_rule('/cart', view_func=cart_controller.get_cart_items, methods=['GET'])
 api_bp.add_url_rule('/cart/<int:id>', view_func=cart_controller.get_cart, methods=['GET'])
-api_bp.add_url_rule('/cart', view_func=cart_controller.create_cart, methods=['POST'])
-api_bp.add_url_rule('/cart/<int:id>', view_func=cart_controller.update_cart, methods=['PUT'])
-api_bp.add_url_rule('/cart/<int:id>', view_func=cart_controller.delete_cart, methods=['DELETE'])
+api_bp.add_url_rule('/cart', view_func=cart_controller.add_to_cart, methods=['POST'])
+api_bp.add_url_rule('/cart/<int:id>', view_func=cart_controller.update_cart_item, methods=['PUT'])
+api_bp.add_url_rule('/cart/<int:id>', view_func=cart_controller.delete_cart_item, methods=['DELETE'])
 
 # Order API Endpoints
-api_bp.add_url_rule('/order', view_func=order_controller.get_orders, methods=['GET'])
+api_bp.add_url_rule('/order', view_func=order_controller.get_all_orders, methods=['GET'])
 api_bp.add_url_rule('/order/<int:id>', view_func=order_controller.get_order, methods=['GET'])
 api_bp.add_url_rule('/order', view_func=order_controller.create_order, methods=['POST'])
 api_bp.add_url_rule('/order/<int:id>', view_func=order_controller.update_order, methods=['PUT'])
