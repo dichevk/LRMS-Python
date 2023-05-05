@@ -1,19 +1,21 @@
-from flask import jsonify, request
+from flask import jsonify, request, Blueprint
 from werkzeug.security import generate_password_hash, check_password_hash
 from ..Models.user_model import User
 from app import app, db
 
-@app.route('/users', methods=['GET'])
+user_bp = Blueprint('user', __name__, url_prefix='/user')
+
+@user_bp.route('/users', methods=['GET'])
 def get_all_users():
     users = User.query.all()
     return jsonify([user.to_dict() for user in users])
 
-@app.route('/users/<int:id>', methods=['GET'])
+@user_bp.route('/users/<int:id>', methods=['GET'])
 def get_user(id):
     user = User.query.get_or_404(id)
     return jsonify(user.to_dict())
 
-@app.route('/users', methods=['POST'])
+@user_bp.route('/users', methods=['POST'])
 def create_user():
     data = request.json
 
@@ -30,7 +32,7 @@ def create_user():
 
     return jsonify({"message": "User created successfully.", "user": new_user.to_dict()}), 201
 
-@app.route('/users/<int:id>', methods=['PUT'])
+@user_bp.route('/users/<int:id>', methods=['PUT'])
 def update_user(id):
     user = User.query.get_or_404(id)
 
@@ -47,7 +49,7 @@ def update_user(id):
 
     return jsonify({"message": "User updated successfully.", "user": user.to_dict()}), 200
 
-@app.route('/users/<int:id>', methods=['DELETE'])
+@user_bp.route('/users/<int:id>', methods=['DELETE'])
 def delete_user(id):
     user = User.query.get_or_404(id)
     db.session.delete(user)
