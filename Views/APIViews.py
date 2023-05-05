@@ -10,16 +10,16 @@ from ..Controllers import (
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 
 # User API Endpoints
-api_bp.add_url_rule('/user', view_func=user_controller.get_users, methods=['GET'])
+api_bp.add_url_rule('/user', view_func=user_controller.get_all_users, methods=['GET'])
 api_bp.add_url_rule('/user/<int:id>', view_func=user_controller.get_user, methods=['GET'])
 api_bp.add_url_rule('/user', view_func=user_controller.create_user, methods=['POST'])
 api_bp.add_url_rule('/user/<int:id>', view_func=user_controller.update_user, methods=['PUT'])
 api_bp.add_url_rule('/user/<int:id>', view_func=user_controller.delete_user, methods=['DELETE'])
 
 # Laptop API Endpoints
-api_bp.add_url_rule('/laptop', view_func=laptop_controller.get_laptops, methods=['GET'])
-api_bp.add_url_rule('/laptop/<int:id>', view_func=laptop_controller.laptop, methods=['GET'])
-api_bp.add_url_rule('/laptop', view_func=laptop_controller.new_laptop, methods=['POST'])
+api_bp.add_url_rule('/laptop', view_func=laptop_controller.get_all_laptops, methods=['GET'])
+api_bp.add_url_rule('/laptop/<int:id>', view_func=laptop_controller.get_laptop, methods=['GET'])
+api_bp.add_url_rule('/laptop', view_func=laptop_controller.create_laptop, methods=['POST'])
 api_bp.add_url_rule('/laptop/<int:id>', view_func=laptop_controller.update_laptop, methods=['PUT'])
 api_bp.add_url_rule('/laptop/<int:id>', view_func=laptop_controller.delete_laptop, methods=['DELETE'])
 
