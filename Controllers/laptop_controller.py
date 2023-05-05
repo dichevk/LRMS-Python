@@ -1,55 +1,49 @@
-from flask import render_template, request, flash, url_for, redirect
-from flask import abort
-from app import app, db
+from flask import Blueprint, jsonify, request, flash, url_for, redirect, abort, render_template
+from app import db
 from ..Models.laptop_model import Laptop
 
+laptop_bp = Blueprint('laptop', __name__)
+
 # Controller for the home page
-@app.route('/')
+@laptop_bp.route('/')
 def index():
     laptops = Laptop.query.all()
     return render_template('index.html', laptops=laptops)
 
+@laptop_bp.route('/laptops', methods=['GET'])
+def get_all_laptops():
+    laptops = Laptop.query.all()
+    return jsonify([laptop.to_dict() for laptop in laptops])
+
 # Controller for a single laptop page
-@app.route('/laptop/<int:id>')
-def laptop(id):
+@laptop_bp.route('/<int:id>/template', methods=['GET'])
+def get_laptop_template(id):
     laptop = Laptop.query.filter_by(id=id).first()
     if laptop is None:
         abort(404)
     return render_template('laptop.html', laptop=laptop)
 
+@laptop_bp.route('/<int:id>', methods=['GET'])
+def get_laptop(id):
+    laptop = Laptop.query.get(id)
+    if not laptop:
+        return {"error": "Laptop not found."}, 404
+    return jsonify(laptop.to_dict())
+
 # Controller for adding a new laptop
-@app.route('/laptop/new', methods=['GET', 'POST'])
-def new_laptop():
-    if request.method == 'POST':
-        name = request.form['name']
-        price = request.form['price']
-        specs = request.form['specs']
-        image_url = request.form['image_url']
-        laptop = Laptop(name=name, price=price, specs=specs, image_url=image_url)
-        db.session.add(laptop)
-        db.session.commit()
-        flash('Laptop added successfully.')
-        return redirect(url_for('index'))
-    return render_template('new_laptop.html')
+@laptop_bp.route('/<int:id>', methods=['POST'])
+def create_laptop():
+    name = request.form['name']
+    price = request.form['price']
+    specs = request.form['specs']
+    image_url = request.form['image_url']
+    laptop = Laptop(name=name, price=price, specs=specs, image_url=image_url)
+    db.session.add(laptop)
+    db.session.commit()
+    flash('Laptop added successfully.')
+    return redirect(url_for('laptop.index'))
 
-# Controller for editing an existing laptop
-@app.route('/laptop/edit/<int:id>', methods=['GET', 'POST'])
-def edit_laptop(id):
-    laptop = Laptop.query.filter_by(id=id).first()
-    if laptop is None:
-        abort(404)
-    if request.method == 'POST':
-        laptop.name = request.form['name']
-        laptop.price = request.form['price']
-        laptop.specs = request.form['specs']
-        laptop.image_url = request.form['image_url']
-        db.session.commit()
-        flash('Laptop updated successfully.')
-        return redirect(url_for('laptop', id=id))
-    return render_template('edit_laptop.html', laptop=laptop)
-
-
-@app.route('/laptop/<int:id>', methods=['PUT'])
+@laptop_bp.route('/<int:id>', methods=['PUT'])
 def update_laptop(id):
     laptop = Laptop.get_by_id(id)
     if not laptop:
@@ -76,7 +70,7 @@ def update_laptop(id):
     return {"message": "Laptop updated successfully.", "laptop": laptop.to_dict()}, 200
 
 # Controller for deleting an existing laptop
-@app.route('/laptop/delete/<int:id>', methods=['POST'])
+@laptop_bp.route('/delete/<int:id>', methods=['POST'])
 def delete_laptop(id):
     laptop = Laptop.query.filter_by(id=id).first()
     if laptop is None:
@@ -84,4 +78,4 @@ def delete_laptop(id):
     db.session.delete(laptop)
     db.session.commit()
     flash('Laptop deleted successfully.')
-    return redirect(url_for('index'))
+    return redirect(url_for('laptop.index'))
