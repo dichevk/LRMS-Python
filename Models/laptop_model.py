@@ -1,7 +1,6 @@
-from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
+from app import db
 
-db = SQLAlchemy()
 
 class Laptop(db.Model):
     id = db.Column(db.Integer, primary_key=True)

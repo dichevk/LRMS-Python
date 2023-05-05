@@ -1,11 +1,12 @@
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 from .Controllers.cart_controller import cart_bp
 from .Controllers.laptop_controller import laptop_bp
 from .Controllers.order_controller import order_bp
 from .Controllers.review_controller import review_bp
 from .Controllers.user_controller import user_bp
-from .Models import db
 
+db = SQLAlchemy()
 def create_app():
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///laptops.db'
